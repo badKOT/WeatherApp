@@ -1,0 +1,64 @@
+1. Вывести менеджеров у которых имеется номер телефона
+SELECT * 
+FROM Managers 
+WHERE Phone IS NOT NULL;
+
+2. Вывести кол-во продаж за 20 июня 2021
+SELECT SUM(Count)
+FROM Sells 
+WHERE Date = '20 июня 2021';
+
+3. Вывести среднюю сумму продажи с товаром 'Фанера'
+SELECT AVG(Sum) 
+FROM Sells 
+JOIN Products
+ON Sells.ID_Prod=Products.ID
+WHERE Products.Name = 'Фанера';
+
+4. Вывести фамилии менеджеров и общую сумму продаж для каждого с товаром 'ОСБ'
+SELECT SUBSTRING_INDEX(Fio, ' ', 1) AS last_name, SUM(Sum)
+FROM Managers
+JOIN Sells
+ON Managers.ID=Sells.ID_Manag
+JOIN Products
+ON Products.ID=Sells.ID_Prod
+WHERE Products.Name='ОСБ'
+group by Fio;
+
+5. Вывести менеджера и товар, который продали 22 августа 2021
+SELECT Fio, Name
+FROM Managers
+JOIN Sells
+ON Managers.ID=Sells.ID_Manag
+JOIN Products
+ON Products.ID=Sells.ID_Prod
+WHERE Date='22 августа 2021';
+
+6. Вывести все товары, у которых в названии имеется 'Фанера' и цена не ниже 1750
+SELECT *
+FROM Products
+WHERE Name LIKE '%Фанера%'
+AND Cost>=1750;
+
+7. Вывести историю продаж товаров, группируя по месяцу продажи и наименованию товара
+SELECT Name, MONTH(Date) AS Month, SUM(Count) AS Count, SUM(Sum) AS Sum 
+FROM Sells 
+JOIN Products
+ON Products.ID=Sells.ID_Prod
+GROUP BY ID_Prod, MONTH(Date);
+
+8. Вывести количество повторяющихся значений и сами значения из таблицы 'Товары', где количество повторений больше 1. 
+SELECT Name, COUNT(*) AS count
+FROM Products
+GROUP BY Name
+HAVING COUNT(*) > 1;
+
+SELECT Volume, COUNT(*) AS count
+FROM Products
+GROUP BY Volume
+HAVING COUNT(*) > 1;
+
+SELECT Cost, COUNT(*) AS count
+FROM Products
+GROUP BY Cost
+HAVING COUNT(*) > 1;
